@@ -32,3 +32,19 @@ def get_df() -> pd.DataFrame:
 @app.get("/api/health")
 def health() -> dict:
     return {"status": "ok", "rows": len(get_df())}
+
+
+@app.get("/api/stats")
+def stats() -> dict:
+    df = get_df()
+    by_borough = (
+        df.groupby("borough")
+        .agg(lots=("bbl", "count"), est_add_units=("est_add_units", "sum"))
+        .reset_index()
+        .to_dict(orient="records")
+    )
+    return {
+        "total_lots": len(df),
+        "total_est_add_units": int(df["est_add_units"].sum()),
+        "by_borough": by_borough,
+    }
