@@ -9,7 +9,7 @@ Run with:
 from pathlib import Path
 
 import pandas as pd
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query
 
 PARQUET_PATH = Path("data/underbuilt.parquet")
 
@@ -91,3 +91,13 @@ def lots(
         "limit": limit,
         "lots": page.to_dict(orient="records"),
     }
+
+
+@app.get("/api/lots/{bbl}")
+def lot_by_bbl(bbl: str) -> dict:
+    """Return a single lot by BBL (Borough-Block-Lot identifier)."""
+    df = get_df()
+    row = df[df["bbl"] == bbl]
+    if row.empty:
+        raise HTTPException(status_code=404, detail=f"BBL {bbl} not found")
+    return row.iloc[0].to_dict()
