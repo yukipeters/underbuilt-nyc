@@ -14,7 +14,7 @@ A public civic web app that identifies NYC tax lots that appear underbuilt relat
 ## Environment
 
 - Python venv at `.venv/`. Activate with `source .venv/bin/activate`.
-- Dependencies: `pandas`, `pyarrow` (see `requirements.txt`).
+- Dependencies: `pandas`, `pyarrow`, `fastapi`, `uvicorn` (see `requirements.txt`).
 
 ## Pipeline
 
@@ -66,12 +66,14 @@ est_add_units = unused_sqft / AVG_UNIT_SIZE_SQFT (default 700 sqft)
 - `data/underbuilt.parquet` — full filtered dataset for backend consumption
 - `data/top100.csv` — top 100 by est_add_units for manual spot-checking
 
-## Planned backend API (not yet built)
+## Backend API
 
-- `GET /api/lots` — filterable by borough, min_unused_far, min_est_units, q (address search)
-- `GET /api/lots/{bbl}`
-- `GET /api/stats`
-- `GET /api/health`
+Run with `uvicorn backend.main:app --reload`. Swagger UI at `/docs`.
+
+- `GET /api/health` — liveness check, returns row count
+- `GET /api/stats` — total lots, total est_add_units, per-borough breakdown
+- `GET /api/lots` — filterable by `borough`, `min_unused_far`, `min_est_units`, `q` (address search); paginated via `limit`/`offset`
+- `GET /api/lots/{bbl}` — single lot by BBL, 404 if not found
 
 ## Planned frontend (not yet built)
 
