@@ -18,6 +18,8 @@ COLUMNS = [
     "zonedist1",
     "unitsres",
     "landuse",
+    "numbldgs",
+    "bldgclass",
     "yearbuilt",
     "latitude",
     "longitude",
@@ -36,11 +38,14 @@ def load_and_clean(pluto_path: str | Path) -> pd.DataFrame:
         "zonedist1": "zoning_district",
         "unitsres": "residential_units",
         "landuse": "land_use",
+        "numbldgs": "num_bldgs",
+        "bldgclass": "bldg_class",
         "yearbuilt": "year_built",
     })
 
     df["bbl"] = df["bbl"].astype(str)
     df["lot_area"] = pd.to_numeric(df["lot_area"].astype(str).str.replace(",", ""), errors="coerce")
+    df["num_bldgs"] = pd.to_numeric(df["num_bldgs"].astype(str).str.replace(",", ""), errors="coerce").fillna(0).astype(int)
 
     # Drop rows missing anything we need for the core calculation
     df = df.dropna(subset=["lot_area", "built_far", "allowed_far", "zoning_district"])
