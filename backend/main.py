@@ -9,7 +9,7 @@ Run with:
 from pathlib import Path
 
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 
 PARQUET_PATH = Path("data/underbuilt.parquet")
 
@@ -31,11 +31,13 @@ def get_df() -> pd.DataFrame:
 
 @app.get("/api/health")
 def health() -> dict:
+    """Liveness check. Returns row count of the loaded dataset."""
     return {"status": "ok", "rows": len(get_df())}
 
 
 @app.get("/api/stats")
 def stats() -> dict:
+    """Aggregate stats: total lots, total estimated additional units, and a per-borough breakdown."""
     df = get_df()
     by_borough = (
         df.groupby("borough")
