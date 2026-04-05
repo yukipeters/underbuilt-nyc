@@ -63,8 +63,3 @@ def write_output(df: pd.DataFrame, output_path: str | Path) -> None:
     output_path = Path(output_path)
     df.to_parquet(output_path, index=False)
     print(f"Wrote {len(df):,} rows to {output_path}")
-
-    # Top 100 CSV for manual spot-checking
-    csv_path = output_path.with_name("top100.csv")
-    df.head(100).to_csv(csv_path, index=False)
-    print(f"Wrote top 100 to {csv_path}")

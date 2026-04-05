@@ -65,7 +65,6 @@ est_add_units = unused_sqft / AVG_UNIT_SIZE_SQFT (default 700 sqft)
 ### Output
 
 - `data/underbuilt.parquet` — full filtered dataset for backend consumption
-- `data/top100.csv` — top 100 by est_add_units for manual spot-checking
 
 ## Backend API
 
