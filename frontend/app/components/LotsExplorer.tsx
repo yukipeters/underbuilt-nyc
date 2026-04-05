@@ -272,8 +272,8 @@ export default function LotsExplorer() {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {loading && (
+          <tbody className={loading ? "opacity-40 pointer-events-none" : ""}>
+            {loading && sortedLots.length === 0 && (
               <tr>
                 <td
                   colSpan={COLUMNS.length + 1}
@@ -293,8 +293,7 @@ export default function LotsExplorer() {
                 </td>
               </tr>
             )}
-            {!loading &&
-              sortedLots.map((lot) => (
+            {sortedLots.map((lot) => (
                 <tr
                   key={lot.bbl}
                   className="border-b border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900"
