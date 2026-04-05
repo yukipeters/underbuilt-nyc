@@ -98,6 +98,8 @@ def lots(
     if min_est_units is not None:
         df = df[df["est_add_units"] >= min_est_units]
     if q:
+        # PLUTO addresses are all-caps; q.upper() normalizes user input to match.
+        # If the pipeline ever lowercases addresses, also add .str.upper() on the column side.
         df = df[df["address"].str.contains(q.upper(), na=False)]
 
     df = df.sort_values(sort_by, ascending=(sort_dir == "asc"), na_position="last")
