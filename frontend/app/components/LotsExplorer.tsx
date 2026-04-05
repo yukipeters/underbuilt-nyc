@@ -119,7 +119,7 @@ export default function LotsExplorer() {
     fetch("/api/stats")
       .then((r) => r.json())
       .then(setStats)
-      .catch(() => {});
+      .catch((e) => console.error("Failed to load stats:", e));
   }, []);
 
   // Fetch lots
