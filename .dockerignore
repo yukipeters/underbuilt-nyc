@@ -1,7 +1,0 @@
-.venv/
-frontend/
-pipeline/
-data/pluto_nyc_raw.csv
-__pycache__/
-*.pyc
-.git/
