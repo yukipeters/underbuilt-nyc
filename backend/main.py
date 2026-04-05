@@ -29,7 +29,8 @@ app = FastAPI(title="underbuilt-nyc", lifespan=lifespan)
 
 
 def get_df() -> pd.DataFrame:
-    assert _df is not None, "Data not loaded"
+    if _df is None:
+        raise RuntimeError("Data not loaded")
     return _df
 
 
@@ -100,7 +101,7 @@ def lots(
     if q:
         # PLUTO addresses are all-caps; q.upper() normalizes user input to match.
         # If the pipeline ever lowercases addresses, also add .str.upper() on the column side.
-        df = df[df["address"].str.contains(q.upper(), na=False)]
+        df = df[df["address"].str.contains(q.upper(), na=False, regex=False)]
 
     df = df.sort_values(sort_by, ascending=(sort_dir == "asc"), na_position="last")
 
