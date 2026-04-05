@@ -37,7 +37,6 @@ est_add_units = unused_sqft / AVG_UNIT_SIZE_SQFT (default 700 sqft)
 | `MAX_NUMBLDGS` | 1 | Exclude multi-building campuses (Breezy Point, Rochdale Village, etc.) |
 | `MAX_LOT_AREA` | 100,000 sqft | Exclude superblock-scale lots where FAR math breaks down |
 | `EXCLUDE_BLDGCLASS_PREFIXES` | `{"R"}` | Exclude condo lots — unreliable builtfar in PLUTO |
-| `EXCLUDE_OWNER_TYPES` | `{"O", "C"}` | Exclude public authority lots (NYCHA, state/federal) — not private development opportunities |
 | `RESIDENTIAL_LAND_USES` | `{1, 2, 3, 4}` | 1=1-2fam, 2=MF walkup, 3=MF elevator, 4=mixed res/commercial |
 
 ### Why these filters exist

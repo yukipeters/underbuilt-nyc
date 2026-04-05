@@ -23,10 +23,6 @@ MIN_EST_UNITS = 1
 # boundary often includes parking and open space, deflating the apparent FAR.
 EXCLUDE_BLDGCLASS_PREFIXES = {"R"}
 
-# Public authority lots (NYCHA, state/federal agencies) are not private development
-# opportunities and should not appear as candidates.
-EXCLUDE_OWNER_TYPES = {"O", "C"}
-
 # Lots with multiple buildings are large cooperative/condo campuses recorded as a single
 # tax lot (e.g. Breezy Point, Rochdale Village, Parkchester). Their built_far is
 # artificially low relative to lot_area, making them appear underbuilt. Exclude them.
@@ -53,7 +49,6 @@ def compute_underbuilt(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df[df["land_use"].isin(RESIDENTIAL_LAND_USES)]
     df = df[~df["bldg_class"].str[0].isin(EXCLUDE_BLDGCLASS_PREFIXES)]
-    df = df[~df["owner_type"].isin(EXCLUDE_OWNER_TYPES)]
     df = df[df["num_bldgs"] <= MAX_NUMBLDGS]
     df = df[df["lot_area"] <= MAX_LOT_AREA]
     df = df[df["unused_sqft"] >= MIN_UNUSED_SQFT]

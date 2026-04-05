@@ -1,6 +1,6 @@
 # underbuilt-nyc
 
-A civic web app that identifies NYC tax lots that appear underbuilt relative to their zoning. It is an approximate signal detector, not a legal buildability engine. Results are candidates for further review, not confirmed development opportunities.
+A public-facing advocacy and research tool that identifies NYC tax lots that appear underbuilt relative to their zoning. Built to support housing advocates, planners, researchers, and anyone interested in expanding NYC's housing supply. It is an approximate signal detector, not a legal buildability engine. Results are candidates for further review, not confirmed development opportunities.
 
 ## How it works
 
