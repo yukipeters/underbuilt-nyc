@@ -21,6 +21,7 @@ COLUMNS = [
     "numbldgs",
     "bldgclass",
     "yearbuilt",
+    "ownertype",
     "latitude",
     "longitude",
 ]
@@ -41,6 +42,7 @@ def load_and_clean(pluto_path: str | Path) -> pd.DataFrame:
         "numbldgs": "num_bldgs",
         "bldgclass": "bldg_class",
         "yearbuilt": "year_built",
+        "ownertype": "owner_type",
     })
 
     df["bbl"] = df["bbl"].astype(str)

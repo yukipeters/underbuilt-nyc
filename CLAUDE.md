@@ -60,6 +60,7 @@ est_add_units = unused_sqft / AVG_UNIT_SIZE_SQFT (default 700 sqft)
 | numbldgs | num_bldgs |
 | bldgclass | bldg_class |
 | yearbuilt | year_built |
+| ownertype | owner_type |
 
 ### Output
 
