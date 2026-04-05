@@ -306,6 +306,7 @@ export default function LotsExplorer() {
                     {lot.zoning_district}
                   </td>
                   <td className="px-3 py-2 text-sm">
+                    {/* null owner_type in PLUTO means private ownership */}
                     {lot.owner_type
                       ? (OWNER_TYPE_LABELS[lot.owner_type] ?? lot.owner_type)
                       : "Private"}
