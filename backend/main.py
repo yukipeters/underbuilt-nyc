@@ -16,12 +16,24 @@ from typing import Literal
 PARQUET_PATH = Path("data/underbuilt.parquet")
 
 _df: pd.DataFrame | None = None
+_stats: dict | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global _df
+    global _df, _stats
     _df = pd.read_parquet(PARQUET_PATH)
+    by_borough = (
+        _df.groupby("borough")
+        .agg(lots=("bbl", "count"), est_add_units=("est_add_units", "sum"))
+        .reset_index()
+        .to_dict(orient="records")
+    )
+    _stats = {
+        "total_lots": len(_df),
+        "total_est_add_units": int(_df["est_add_units"].sum()),
+        "by_borough": by_borough,
+    }
     yield
 
 
@@ -43,18 +55,9 @@ def health() -> dict:
 @app.get("/api/stats")
 def stats() -> dict:
     """Aggregate stats: total lots, total estimated additional units, and a per-borough breakdown."""
-    df = get_df()
-    by_borough = (
-        df.groupby("borough")
-        .agg(lots=("bbl", "count"), est_add_units=("est_add_units", "sum"))
-        .reset_index()
-        .to_dict(orient="records")
-    )
-    return {
-        "total_lots": len(df),
-        "total_est_add_units": int(df["est_add_units"].sum()),
-        "by_borough": by_borough,
-    }
+    if _stats is None:
+        raise RuntimeError("Data not loaded")
+    return _stats
 
 
 SORTABLE_COLUMNS = {
