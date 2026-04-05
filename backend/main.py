@@ -9,20 +9,23 @@ Run with:
 from pathlib import Path
 
 import pandas as pd
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Query
 from typing import Literal
 
 PARQUET_PATH = Path("data/underbuilt.parquet")
 
-app = FastAPI(title="underbuilt-nyc")
-
 _df: pd.DataFrame | None = None
 
 
-@app.on_event("startup")
-def load_data() -> None:
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     global _df
     _df = pd.read_parquet(PARQUET_PATH)
+    yield
+
+
+app = FastAPI(title="underbuilt-nyc", lifespan=lifespan)
 
 
 def get_df() -> pd.DataFrame:
