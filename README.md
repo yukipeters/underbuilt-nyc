@@ -6,7 +6,7 @@ A public-facing advocacy and research tool that identifies NYC tax lots that app
 
 1. **Pipeline** reads NYC's PLUTO dataset, computes unused floor area for each residential lot, and writes a Parquet file.
 2. **Backend** loads the Parquet file at startup and serves it via a read-only REST API.
-3. **Frontend** (planned) provides address search, filters, and a sortable table with ZoLa links.
+3. **Frontend** provides address search, filters, and a sortable table with ZoLa links.
 
 ### Methodology
 
@@ -48,9 +48,7 @@ python -m pipeline.run
 python -m pipeline.run --pluto data/pluto_nyc_raw.csv --output data/underbuilt.parquet
 ```
 
-Outputs:
-- `data/underbuilt.parquet` — full filtered dataset consumed by the backend
-- `data/top100.csv` — top 100 lots by estimated additional units, for manual spot-checking
+Outputs `data/underbuilt.parquet` — the full filtered dataset consumed by the backend.
 
 ## Backend
 
@@ -82,11 +80,21 @@ Swagger UI available at `http://localhost:8000/docs`.
 | `limit` | int | Max results, up to 1000 (default: 100) |
 | `offset` | int | Pagination offset |
 
+## Frontend
+
+```sh
+cd frontend
+npm install
+npm run dev
+```
+
+Runs at `http://localhost:3000`. Proxies `/api/*` to the backend — set `BACKEND_URL` to point at a non-local backend (default: `http://localhost:8000`).
+
 ## Architecture
 
 ```
 /pipeline   Python/Pandas ETL
 /backend    FastAPI, loads Parquet at startup, no database
-/frontend   Next.js (planned)
+/frontend   Next.js
 /data       Raw PLUTO CSV (gitignored) and pipeline outputs
 ```
