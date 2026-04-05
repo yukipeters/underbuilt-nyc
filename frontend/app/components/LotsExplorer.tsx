@@ -261,8 +261,8 @@ export default function LotsExplorer() {
                 >
                   {col.label}
                   {sortKey === col.key && (
-                    <span className="ml-1 text-zinc-400">
-                      {sortDir === "asc" ? "↑" : "↓"}
+                    <span className="ml-1 text-[10px] text-zinc-500 dark:text-zinc-400">
+                      {sortDir === "asc" ? "▲" : "▼"}
                     </span>
                   )}
                 </th>
