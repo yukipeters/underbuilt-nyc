@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
+from typing import Literal
 
 PARQUET_PATH = Path("data/underbuilt.parquet")
 
@@ -52,25 +53,39 @@ def stats() -> dict:
     }
 
 
+SORTABLE_COLUMNS = {
+    "address", "borough", "zoning_district", "owner_type",
+    "built_far", "allowed_far", "unused_far", "lot_area",
+    "est_add_units", "year_built",
+}
+
+
 @app.get("/api/lots")
 def lots(
     borough: str | None = None,
     min_unused_far: float | None = None,
     min_est_units: int | None = None,
     q: str | None = None,
+    sort_by: str = "est_add_units",
+    sort_dir: Literal["asc", "desc"] = "desc",
     limit: int = Query(default=100, le=1000),
     offset: int = 0,
 ) -> dict:
     """
-    List underbuilt lots, sorted by estimated additional units descending.
+    List underbuilt lots.
 
     - **borough**: filter by borough code (BK, BX, MN, QN, SI)
     - **min_unused_far**: minimum unused FAR
     - **min_est_units**: minimum estimated additional units
     - **q**: case-insensitive substring match on address
+    - **sort_by**: column to sort by (default: est_add_units)
+    - **sort_dir**: asc or desc (default: desc)
     - **limit**: max results to return (default 100, max 1000)
     - **offset**: pagination offset
     """
+    if sort_by not in SORTABLE_COLUMNS:
+        raise HTTPException(status_code=400, detail=f"Invalid sort_by column: {sort_by}")
+
     df = get_df()
 
     if borough:
@@ -81,6 +96,8 @@ def lots(
         df = df[df["est_add_units"] >= min_est_units]
     if q:
         df = df[df["address"].str.contains(q.upper(), na=False)]
+
+    df = df.sort_values(sort_by, ascending=(sort_dir == "asc"), na_position="last")
 
     total = len(df)
     page = df.iloc[offset : offset + limit]

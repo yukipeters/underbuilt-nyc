@@ -109,10 +109,10 @@ export default function LotsExplorer() {
     };
   }, [query]);
 
-  // Reset offset when filters change
+  // Reset offset when filters or sort change
   useEffect(() => {
     setOffset(0);
-  }, [borough, minUnusedFar, minEstUnits]);
+  }, [borough, minUnusedFar, minEstUnits, sortKey, sortDir]);
 
   // Fetch stats once
   useEffect(() => {
@@ -131,6 +131,8 @@ export default function LotsExplorer() {
     if (borough) params.set("borough", borough);
     if (minUnusedFar) params.set("min_unused_far", minUnusedFar);
     if (minEstUnits) params.set("min_est_units", minEstUnits);
+    params.set("sort_by", sortKey);
+    params.set("sort_dir", sortDir);
     params.set("limit", String(LIMIT));
     params.set("offset", String(offset));
 
@@ -147,7 +149,7 @@ export default function LotsExplorer() {
         setError(e.message);
         setLoading(false);
       });
-  }, [debouncedQuery, borough, minUnusedFar, minEstUnits, offset]);
+  }, [debouncedQuery, borough, minUnusedFar, minEstUnits, offset, sortKey, sortDir]);
 
   function handleSort(key: SortKey) {
     if (key === sortKey) {
@@ -158,16 +160,7 @@ export default function LotsExplorer() {
     }
   }
 
-  const lots = data?.lots ?? [];
-  const sortedLots = [...lots].sort((a, b) => {
-    const av = a[sortKey];
-    const bv = b[sortKey];
-    const cmp =
-      typeof av === "number" && typeof bv === "number"
-        ? av - bv
-        : String(av).localeCompare(String(bv));
-    return sortDir === "asc" ? cmp : -cmp;
-  });
+  const sortedLots = data?.lots ?? [];
 
   const total = data?.total ?? 0;
   const page = Math.floor(offset / LIMIT) + 1;
