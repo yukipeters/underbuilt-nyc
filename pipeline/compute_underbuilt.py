@@ -45,7 +45,7 @@ def compute_underbuilt(df: pd.DataFrame) -> pd.DataFrame:
 
     df["unused_far"] = (df["allowed_far"] - df["built_far"]).clip(lower=0)
     df["unused_sqft"] = df["unused_far"] * df["lot_area"]
-    df["est_add_units"] = (df["unused_sqft"] / AVG_UNIT_SIZE_SQFT).astype(int)
+    df["est_add_units"] = (df["unused_sqft"] / AVG_UNIT_SIZE_SQFT).astype(int)  # truncates (intentional: conservative estimate)
 
     df = df[df["land_use"].isin(RESIDENTIAL_LAND_USES)]
     df = df[~df["bldg_class"].str[0].isin(EXCLUDE_BLDGCLASS_PREFIXES)]
